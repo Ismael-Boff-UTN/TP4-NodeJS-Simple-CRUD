@@ -1,4 +1,5 @@
 var contenido = document.querySelector("#empleadosLista");
+var editar = document.querySelector("#editarForm");
 
 //Obtengo Todos Los Empleados De La Base De Datos
 //Usando Un Fetch Asyncrono
@@ -28,8 +29,15 @@ function tabla(datos) {
                     onclick=eliminarEmpleado("${valor.legajo}")
                     >Eliminar</button></td>
                     
-                    <td><a ><button type="button" class="btn btn-warning"
-                     onclick=editarEmpleado("${valor.legajo}")
+                    <td><a href="editarEmpleado.html?legajo=${
+                      valor.legajo
+                    }&apellido=${valor.apellido}&nombre=${
+      valor.nombre
+    }&sector=${valor.sector}&dni=${valor.dni}&fecha=${
+      new Date(valor.fechaIngreso).toISOString().split("T")[0]
+    }&activo=${valor.activo}">
+                    <button type="button" class="btn btn-warning" 
+                     onclick=editarEmpleado("${valor.legajo}") 
                     >Editar</button></a></td>
                    
                 </tr>`;
@@ -56,6 +64,7 @@ async function readFormData() {
   }).then((res) => res.json());
   window.confirm("Empleado Agregado Con Exito!");
   resetForm();
+  window.location.href = "http://localhost:4000/";
 }
 
 function resetForm() {
@@ -65,25 +74,6 @@ function resetForm() {
   document.getElementById("fecha").value = "";
   document.getElementById("sector").value = "";
   document.getElementById("activo").value = "";
-}
-
-//Funcion Para Editar
-async function editarEmpleado(id) {
-  console.log(id);
-
-  await fetch(`http://localhost:4000/api/empleados${id}`)
-    .then((res) => res.json())
-    .then((datos) => {
-      console.log(datos);
-    });
-
-    
-  document.getElementById("nombreEdit").value = datos.nombre;
-  document.getElementById("apellidoEdit").value = datos.apellido;
-  document.getElementById("dniEdit").value = datos.dni;
-  document.getElementById("fechaEdit").value = datos.fechaIngreso;
-  document.getElementById("sectorEdit").value = datos.sector;
-  document.getElementById("activoEdit").value = datos.activo;
 }
 
 //Funcion Para Eliminar
